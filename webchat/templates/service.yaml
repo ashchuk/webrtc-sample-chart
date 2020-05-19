@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "webchat.fullname" . }}-{{ .Values.labels.client }}
+  labels:
+    {{- include "webchat.labels" . | nindent 4 }}-{{ .Values.labels.client }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "webchat.selectorLabels" . | nindent 4 }}-{{ .Values.labels.client }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "webchat.fullname" . }}-{{ .Values.labels.server }}
+  labels:
+    {{- include "webchat.labels" . | nindent 4 }}-{{ .Values.labels.server }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 8080 
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "webchat.selectorLabels" . | nindent 4 }}-{{ .Values.labels.server }}
